@@ -37,7 +37,7 @@ use image_toolbox::{load_img,normalize_brightness,save_img};
  
 let img = load_img("./test/bright_miami.jpg").unwrap();
 let new_image = normalize_brightness(&img).unwrap();
-save_img(&img,"./test/result.jpg").unwrap();
+save_img(&new_image,"./test/result.jpg").unwrap();
 ```
 
 ## before 
