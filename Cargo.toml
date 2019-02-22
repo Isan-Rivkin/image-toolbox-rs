@@ -1,6 +1,6 @@
 [package]
 name = "image-toolbox"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Isan-Rivkin <isanrivkin@gmail.com>"]
 edition = "2018"
 description = "Simple and fast Image processing features library built on top of Piston/Image"
