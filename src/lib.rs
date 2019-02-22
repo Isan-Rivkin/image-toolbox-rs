@@ -10,6 +10,7 @@
 //! ```
 //! use image_toolbox_rs::{Histogram, load_img};
 //! use image::{DynamicImage};
+//! 
 //! // load img 
 //! let img = load_img("./test/bright_miami.jpg").unwrap();
 //! let histogram = Histogram::new(&img);
@@ -19,8 +20,8 @@
 //! ```
 //! # turn a TOO bright image into normal colors
 //! ```ignore
-//! use image_toolbox_rs::{load_img};
-//! use image_toolbox_rs::{load_img,normalize_brightness};
+//! use image_toolbox_rs::{load_img,normalize_brightness,save_img};
+//! 
 //! let img = load_img("./test/bright_miami.jpg").unwrap();
 //! let new_image = normalize_brightness(&img).unwrap();
 //! save_img(&img,"./test/result.jpg").unwrap();
@@ -134,6 +135,7 @@ pub fn transform_pixel(original_pixel : u8, colorType : Pix ,histogram :& Histog
 /// ```
 /// use image_toolbox_rs::{transform_from_histogram,Histogram};
 /// use image::{DynamicImage};
+/// 
 /// // make a new 500X500 image 
 /// let img = DynamicImage::new_rgba8(500,500); 
 /// let histogram = Histogram::new(&img);
@@ -160,6 +162,7 @@ pub fn transform_from_histogram(img : &DynamicImage, hist : &Histogram)->Dynamic
 /// Load any type of image uses `DynamicImage` type. 
 /// ```
 /// use image_toolbox_rs::{load_img};
+/// 
 /// let img = load_img("./test/bright_miami.jpg").unwrap();
 /// ```
 pub fn load_img(path : &str)->Result<DynamicImage,image::ImageError>{
@@ -170,6 +173,7 @@ pub fn load_img(path : &str)->Result<DynamicImage,image::ImageError>{
 /// ```
 /// use image_toolbox_rs::{save_img};
 /// use image::{DynamicImage};
+/// 
 /// // make a new 500X500 image 
 /// let img = DynamicImage::new_rgba8(500,500); 
 /// // save the image 
@@ -183,6 +187,7 @@ pub fn save_img(img : &DynamicImage, path : &str)->Result<(),std::io::Error>{
 /// wrapper for `transform_from_histogram` function. 
 /// ```
 /// use image_toolbox_rs::{load_img,normalize_brightness};
+/// 
 /// let img = load_img("./test/bright_miami.jpg").unwrap();
 /// let new_image = normalize_brightness(&img).unwrap();
 /// // save_img(&img,"./test/result.jpg").unwrap();
