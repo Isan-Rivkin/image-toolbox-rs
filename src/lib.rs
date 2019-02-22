@@ -1,3 +1,32 @@
+//! # image-toolbox 
+//! Quick to start, different and random Image operations. 
+//! Feel free to contribute and add new features via a Pull Request.
+//! # How to use
+//! In Cargo.toml 
+//! ```
+//! [dependencies]
+//! image-toolbox = "*"
+//! ```
+//! # The histogram struct 
+//! ```
+//! use image_toolbox_rs::{Histogram, load_img};
+//! use image::{DynamicImage};
+//! // load img 
+//! let img = load_img("./test/bright_miami.jpg").unwrap();
+//! let histogram = Histogram::new(&img);
+//! println!("{:?}",histogram);
+//! // get the r,g,b probability of some pixel value 
+//! let (p_r,p_g,p_b) : (f32,f32,f32) = histogram.probability(200);
+//! ```
+//! # turn a TOO bright image into normal colors
+//! ```ignore
+//! use image_toolbox_rs::{load_img};
+//! use image_toolbox_rs::{load_img,normalize_brightness};
+//! let img = load_img("./test/bright_miami.jpg").unwrap();
+//! let new_image = normalize_brightness(&img).unwrap();
+//! save_img(&img,"./test/result.jpg").unwrap();
+//! ```
+
 extern crate image;
 extern crate math;
 use std::fmt;
@@ -5,12 +34,14 @@ use image::{GenericImage, ImageBuffer,RGB,GenericImageView, DynamicImage};
 use image::imageops;
 use std::cmp::{min, max};
 
+/// used to represent pixel color type in Histogram struct
 #[derive(Debug, Copy, Clone)]
 pub enum Pix{
     R,G,B
 }
 
-
+/// Histogram representation of an image 
+/// represents the distribution of Red,Green,Blue pixels in an image. 
 pub struct Histogram{
     r_dist : Vec<f32>,
     g_dist : Vec<f32>,
@@ -42,17 +73,17 @@ impl fmt::Debug for Histogram {
 }
 
 impl Histogram{
-    fn probability(&self,pix_val: u8)->(f32,f32,f32){
+    pub fn probability(&self,pix_val: u8)->(f32,f32,f32){
         (self.r_dist[pix_val as usize],self.g_dist[pix_val as usize],self.b_dist[pix_val as usize])
     }
-    fn probability_of(&self,p : Pix, pix_val : u8)->f32{
+    pub fn probability_of(&self,p : Pix, pix_val : u8)->f32{
         match p{
             R => self.r_dist[pix_val as usize], 
             G => self.g_dist[pix_val as usize], 
             B => self.b_dist[pix_val as usize], 
         }
     }
-    fn new(img : & DynamicImage)->Self{
+    pub fn new(img : & DynamicImage)->Self{
         let (width, height) = img.dimensions();
         let L = 256;
         let mut r_dist = vec![0f32;L];
@@ -90,18 +121,7 @@ impl Histogram{
     }
 }
 
-
-fn T(r : u8, p_r : f32, p_0: f32)->f32{
-    let L = 256.0;
-    (L-1.0) * (p_r)
-}
-fn t_pixel(rgb: (u8,u8,u8) , p_r_0 : (f32,f32), p_g_0 : (f32,f32) ,p_b_0 : (f32,f32))->(u8,u8,u8){
-    let tr = T(rgb.0,p_r_0.0,p_r_0.1) as u8;
-    let tg = T(rgb.1,p_g_0.0,p_g_0.1) as u8;
-    let tb = T(rgb.2,p_b_0.0,p_b_0.1) as u8;
-    (tr,tg,tb)
-}
-fn transform_pixel(original_pixel : u8, colorType : Pix ,histogram :& Histogram)-> u8{
+pub fn transform_pixel(original_pixel : u8, colorType : Pix ,histogram :& Histogram)-> u8{
     let L = 256.0; 
     let new_pixel = 0; 
     let mut distros_sum = 0.0;
@@ -111,12 +131,18 @@ fn transform_pixel(original_pixel : u8, colorType : Pix ,histogram :& Histogram)
     }
     ((L-1.0) * distros_sum) as u8
 }
-/// the real deal 
-/// does make image form very bright to darker but in a nice wayu and works with the integral
-pub fn transform_from_his(img : &DynamicImage, hist : &Histogram)->DynamicImage{
+/// turn a very bright image into a normal looking one by using histogram equalization.
+/// ```
+/// use image_toolbox_rs::{transform_from_histogram,Histogram};
+/// use image::{DynamicImage};
+/// // make a new 500X500 image 
+/// let img = DynamicImage::new_rgba8(500,500); 
+/// let histogram = Histogram::new(&img);
+/// let new_image = transform_from_histogram(&img, &histogram);
+/// ```
+pub fn transform_from_histogram(img : &DynamicImage, hist : &Histogram)->DynamicImage{
     let (w,h) = img.dimensions();
     let mut new_img = DynamicImage::new_rgba8(w, h);
-    let pixel = img.get_pixel(w-1, h-1);
     for i in 0..w{
         for j in 0..h{
             let pixel = img.get_pixel(i, j);
@@ -132,7 +158,41 @@ pub fn transform_from_his(img : &DynamicImage, hist : &Histogram)->DynamicImage{
     }
     new_img
 }
-
+/// Load any type of image uses `DynamicImage` type. 
+/// ```
+/// use image_toolbox_rs::{load_img};
+/// let img = load_img("./test/bright_miami.jpg").unwrap();
+/// ```
+pub fn load_img(path : &str)->Result<DynamicImage,image::ImageError>{
+    let im = image::open(path)?;
+    Ok(im)
+}
+/// Save an image to disk 
+/// ```
+/// use image_toolbox_rs::{save_img};
+/// use image::{DynamicImage};
+/// // make a new 500X500 image 
+/// let img = DynamicImage::new_rgba8(500,500); 
+/// // save the image 
+/// save_img(&img,"./test/empty_img.jpg").unwrap();
+/// ```
+pub fn save_img(img : &DynamicImage, path : &str)->Result<(),std::io::Error>{
+    img.save(path)?;
+    Ok(())
+}
+/// transform a very bright image into normal brightness based on histogram equalization
+/// wrapper for `transform_from_histogram` function. 
+/// ```
+/// use image_toolbox_rs::{load_img,normalize_brightness};
+/// let img = load_img("./test/bright_miami.jpg").unwrap();
+/// let new_image = normalize_brightness(&img).unwrap();
+/// // save_img(&img,"./test/result.jpg").unwrap();
+/// ```
+pub fn normalize_brightness(img : &DynamicImage)->Result<DynamicImage,()>{
+        let histogram = Histogram::new(img);
+        let new_image = transform_from_histogram(&img, &histogram);
+        Ok(new_image)
+}
 
 #[cfg(test)]
 mod tests {
@@ -168,7 +228,7 @@ mod tests {
         let path = "./test/bright_miami.jpg";
         let img = image::open(path).unwrap();
         let histogram = Histogram::new(&img);
-        let new_image = transform_from_his(&img, &histogram);
+        let new_image = transform_from_histogram(&img, &histogram);
         // verify 
         let test_img = image::open("./test/normalized_miami.jpg").unwrap();
         assert!(equals(&test_img, &new_image),"image not equal");
