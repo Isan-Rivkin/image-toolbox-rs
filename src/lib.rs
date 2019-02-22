@@ -1,4 +1,3 @@
-//! # image-toolbox 
 //! Quick to start, different and random Image operations. 
 //! Feel free to contribute and add new features via a Pull Request.
 //! # How to use
