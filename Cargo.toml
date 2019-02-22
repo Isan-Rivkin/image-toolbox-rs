@@ -3,6 +3,17 @@ name = "image-toolbox"
 version = "0.1.0"
 authors = ["Isan-Rivkin <isanrivkin@gmail.com>"]
 edition = "2018"
+description = "Simple and fast Image processing features library built on top of Piston/Image"
+keywords = ["image", "histogram", "bright image"]
+categories = ["multimedia::images", "multimedia::encoding", "images"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/Isan-Rivkin/image-toolbox-rs.git"
+homepage = "https://github.com/Isan-Rivkin/image-toolbox-rs.git"
+
+[lib]
+name = "image_toolbox"
+path = "./src/lib.rs"
 
 [dependencies]
 image = "0.21.0"
