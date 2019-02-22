@@ -6,12 +6,12 @@ use image::imageops;
 use std::cmp::{min, max};
 
 #[derive(Debug, Copy, Clone)]
-enum Pix{
+pub enum Pix{
     R,G,B
 }
 
 
-struct Histogram{
+pub struct Histogram{
     r_dist : Vec<f32>,
     g_dist : Vec<f32>,
     b_dist : Vec<f32>
@@ -113,7 +113,7 @@ fn transform_pixel(original_pixel : u8, colorType : Pix ,histogram :& Histogram)
 }
 /// the real deal 
 /// does make image form very bright to darker but in a nice wayu and works with the integral
-fn transform_from_his(img : &DynamicImage, hist : &Histogram)->DynamicImage{
+pub fn transform_from_his(img : &DynamicImage, hist : &Histogram)->DynamicImage{
     let (w,h) = img.dimensions();
     let mut new_img = DynamicImage::new_rgba8(w, h);
     let pixel = img.get_pixel(w-1, h-1);
