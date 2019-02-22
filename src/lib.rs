@@ -8,7 +8,7 @@
 //! ```
 //! # The histogram struct 
 //! ```
-//! use image_toolbox_rs::{Histogram, load_img};
+//! use image_toolbox::{Histogram, load_img};
 //! use image::{DynamicImage};
 //! 
 //! // load img 
