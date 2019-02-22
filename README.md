@@ -20,7 +20,7 @@ image-toolbox = "*"
 # The histogram struct 
 
 ```rust
-use image_toolbox_rs::{Histogram, load_img};
+use image_toolbox::{Histogram, load_img};
 use image::{DynamicImage};
  
 // load img 
@@ -33,7 +33,7 @@ let (p_r,p_g,p_b) : (f32,f32,f32) = histogram.probability(200);
 # turn a TOO bright image into normal colors
 
 ```rust
-use image_toolbox_rs::{load_img,normalize_brightness,save_img};
+use image_toolbox::{load_img,normalize_brightness,save_img};
  
 let img = load_img("./test/bright_miami.jpg").unwrap();
 let new_image = normalize_brightness(&img).unwrap();

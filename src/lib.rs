@@ -2,7 +2,7 @@
 //! Feel free to contribute and add new features via a Pull Request.
 //! # How to use
 //! In Cargo.toml 
-//! ```
+//! ```ignore
 //! [dependencies]
 //! image-toolbox = "*"
 //! ```
@@ -20,7 +20,7 @@
 //! ```
 //! # turn a TOO bright image into normal colors
 //! ```ignore
-//! use image_toolbox_rs::{load_img,normalize_brightness,save_img};
+//! use image_toolbox::{load_img,normalize_brightness,save_img};
 //! 
 //! let img = load_img("./test/bright_miami.jpg").unwrap();
 //! let new_image = normalize_brightness(&img).unwrap();
@@ -133,7 +133,7 @@ pub fn transform_pixel(original_pixel : u8, colorType : Pix ,histogram :& Histog
 }
 /// turn a very bright image into a normal looking one by using histogram equalization.
 /// ```
-/// use image_toolbox_rs::{transform_from_histogram,Histogram};
+/// use image_toolbox::{transform_from_histogram,Histogram};
 /// use image::{DynamicImage};
 /// 
 /// // make a new 500X500 image 
@@ -161,7 +161,7 @@ pub fn transform_from_histogram(img : &DynamicImage, hist : &Histogram)->Dynamic
 }
 /// Load any type of image uses `DynamicImage` type. 
 /// ```
-/// use image_toolbox_rs::{load_img};
+/// use image_toolbox::{load_img};
 /// 
 /// let img = load_img("./test/bright_miami.jpg").unwrap();
 /// ```
@@ -171,7 +171,7 @@ pub fn load_img(path : &str)->Result<DynamicImage,image::ImageError>{
 }
 /// Save an image to disk 
 /// ```
-/// use image_toolbox_rs::{save_img};
+/// use image_toolbox::{save_img};
 /// use image::{DynamicImage};
 /// 
 /// // make a new 500X500 image 
@@ -186,7 +186,7 @@ pub fn save_img(img : &DynamicImage, path : &str)->Result<(),std::io::Error>{
 /// transform a very bright image into normal brightness based on histogram equalization
 /// wrapper for `transform_from_histogram` function. 
 /// ```
-/// use image_toolbox_rs::{load_img,normalize_brightness};
+/// use image_toolbox::{load_img,normalize_brightness};
 /// 
 /// let img = load_img("./test/bright_miami.jpg").unwrap();
 /// let new_image = normalize_brightness(&img).unwrap();
