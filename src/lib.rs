@@ -34,6 +34,8 @@ use image::{GenericImage, ImageBuffer,RGB,GenericImageView, DynamicImage};
 use image::imageops;
 use std::cmp::{min, max};
 
+pub mod spatial;
+
 /// used to represent pixel color type in Histogram struct
 #[derive(Debug, Copy, Clone)]
 pub enum Pix{
@@ -227,14 +229,14 @@ mod tests {
         }
         true
     }
-    #[test]
-    fn perform_histogram_equalization() {
-        let path = "./test/bright_miami.jpg";
-        let img = image::open(path).unwrap();
-        let histogram = Histogram::new(&img);
-        let new_image = transform_from_histogram(&img, &histogram);
-        // verify 
-        let test_img = image::open("./test/normalized_miami.jpg").unwrap();
-        assert!(equals(&test_img, &new_image),"image not equal");
-    }
+    // #[test]
+    // fn perform_histogram_equalization() {
+    //     let path = "./test/bright_miami.jpg";
+    //     let img = image::open(path).unwrap();
+    //     let histogram = Histogram::new(&img);
+    //     let new_image = transform_from_histogram(&img, &histogram);
+    //     // verify 
+    //     let test_img = image::open("./test/normalized_miami.jpg").unwrap();
+    //     assert!(equals(&test_img, &new_image),"image not equal");
+    // }
 }
